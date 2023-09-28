@@ -5,7 +5,7 @@ const connect = require("../config/db.js");
 
 router.get("/", (req, res) => {
   connect.query(
-    "SELECT * FROM kapal INNER JOIN dpi ON kapal.id_dpi = dpi.id_dpi INNER JOIN alat_tangkap ON kapal.id_alat_tangkap = alat_tangkap.id_alat_tangkap INNER JOIN pemilik ON kapal.id_pemilik = pemilik.id_pemilik",
+    "SELECT k.nama_kapal, p.nama_pemilik, d.luas, a.nama_alat_tangkap FROM kapal as k INNER JOIN dpi as d ON k.id_dpi = d.id_dpi INNER JOIN alat_tangkap as a ON k.id_alat_tangkap = a.id_alat_tangkap INNER JOIN pemilik as p ON k.id_pemilik = p.id_pemilik",
     (err, rows) => {
       if (err) {
         return res.status(500).json({
@@ -66,20 +66,24 @@ router.post(
 
 router.get("/(:id)", (req, res) => {
   let id = req.params.id;
-  connect.query("SELECT * FROM kapal WHERE id_kapal=?", id, (err, rows) => {
-    if (err) {
-      return res.status(500).json({
-        status: false,
-        message: "Internal Server Error",
-      });
-    } else {
-      return res.status(200).json({
-        status: true,
-        message: "Data Pemilik",
-        payload: rows,
-      });
+  connect.query(
+    "SELECT k.nama_kapal, p.nama_pemilik, d.luas, a.nama_alat_tangkap FROM kapal as k INNER JOIN dpi as d ON k.id_dpi = d.id_dpi INNER JOIN alat_tangkap as a ON k.id_alat_tangkap = a.id_alat_tangkap INNER JOIN pemilik as p ON k.id_pemilik = p.id_pemilik WHERE id_kapal=?",
+    id,
+    (err, rows) => {
+      if (err) {
+        return res.status(500).json({
+          status: false,
+          message: "Internal Server Error",
+        });
+      } else {
+        return res.status(200).json({
+          status: true,
+          message: "Data Pemilik",
+          payload: rows,
+        });
+      }
     }
-  });
+  );
 });
 
 router.patch(
