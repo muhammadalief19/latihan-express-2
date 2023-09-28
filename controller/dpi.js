@@ -44,7 +44,7 @@ router.post(
           message: "Internal Server Error",
         });
       } else {
-        return res.status(200).json({
+        return res.status(201).json({
           status: true,
           message: "Data DPI berhasil ditambahkan",
           payload: data,
@@ -122,8 +122,7 @@ router.delete("/(:id)", (req, res) => {
     } else {
       return res.status(200).json({
         status: true,
-        message: "Data DPI",
-        payload: rows,
+        message: "Data DPI berhasil didelete",
       });
     }
   });
